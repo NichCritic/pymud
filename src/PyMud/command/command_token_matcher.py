@@ -49,7 +49,7 @@ def build_grammar(names, spells, verbs):
             say = "say"
             create = "create"
             cast = "cast"
-            verb = (adverb s verb) / {verbs_format}
+            verb = {verbs_format}
             noun = {nouns_format}
             preposition = "to" / "through" / "at" / "on"
             adverb = "quickly"
