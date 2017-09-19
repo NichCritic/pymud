@@ -75,4 +75,16 @@ class Tir(Rune):
         pass
 
 
+class Fir(Rune):
+    '''Fir sets the element of the spell to fire'''
+    pass
+
+
+class Bal(Rune):
+    '''Bal creates a ball shaped projectile'''
+
+    def activate(self, target):
+        pass
+
+
 runes = {"luv": Luv}
