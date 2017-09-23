@@ -5,6 +5,7 @@ Created on 2014-03-15
 '''
 
 from Systems.system import System
+from Systems.av_event_mixin import AVEventMixin
 from copy import copy
 
 
@@ -38,3 +39,11 @@ class AVEventContainerPropagationSystem(System, Propagator):
             for event in fro.av_events.events:
                 self.propagate(event, fro, to)
                 event.handle()
+
+
+class AVEventEmittingSystem(System, AVEventMixin):
+    manditory = ['av_event', 'location']
+    handles = ['av_event']
+
+    def handle(self, node):
+        self.av_event(node, node.av_event.data, node.av_event.format)

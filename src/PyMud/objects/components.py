@@ -10,6 +10,14 @@ from sqlalchemy.orm import relationship, backref
 from objects.materials import materials
 
 
+class AVEvent(object):
+
+    def __init__(self, entity_id, format, data=None):
+        self.entity_id = entity_id
+        self.format = format
+        self.data = {} if data is None else data
+
+
 class AVEvents(object):
 
     def __init__(self, entity_id):
@@ -473,6 +481,7 @@ class Container(Base):
 components = {
     "activating": Activating,
     "ascending": Ascending,
+    "av_event": AVEvent,
     "av_events": AVEvents,
     "av_messages": AVMessages,
     "changing": Changing,

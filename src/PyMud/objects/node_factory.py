@@ -158,6 +158,10 @@ class Node(object):
         self.add_or_attach_component('network_messages', None)
         self.network_messages.send(text)
 
+    def emit(self, format, data=None):
+        self.add_or_attach_component(
+            'av_event', {'format': format, 'data': data})
+
 
 class NodeList(list):
 

@@ -9,7 +9,7 @@ from objects.components import components, db_components
 from room.room_components import db_components as db_room_components, components as room_components
 from startup_scripts import setup_objects, setup_db
 from objects.components import components
-from Systems.AVEventSystem import AVEventExitPropagationSystem
+from Systems.AVEventSystem import AVEventExitPropagationSystem, AVEventEmittingSystem
 from Systems.system_set import DBSystemSet
 
 
@@ -33,6 +33,7 @@ class Test(unittest.TestCase):
         self.node_factory = node_factory
         self.system_set = DBSystemSet(object_db, self.session_manager)
         self.av_prop = AVEventExitPropagationSystem(node_factory)
+        self.av_emit = AVEventEmittingSystem(node_factory)
         self.system_set.register(self.av_prop)
 
     def test_get_nodes(self):
@@ -46,6 +47,17 @@ class Test(unittest.TestCase):
             nodes = self.av_prop.get_nodes()
         # Just av_events shouldn't be enough
         self.assertEqual(len(nodes), 0)
+
+    def test_emitting_adds_event_to_room(self):
+        room = self.node_factory.create_new_node({'room': {}})
+        e = self.node_factory.create_new_node({'location': {'room': room.id},
+                                               'av_event': {'format': [
+                                                   ([("visibility", 60),
+                                                     ("is_caller")], ["foo"]),
+                                                   ([("visibility", 60)], ["bar"])
+                                               ]}})
+        self.av_emit.process()
+        self.assertTrue(room.entity_has('av_events'))
 
 
 if __name__ == "__main__":

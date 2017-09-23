@@ -25,7 +25,7 @@ from Systems.PuttingSystem import PuttingSystem
 from Systems.EnteringSystem import EnteringSystem
 from Systems.AscendingSystem import AscendingSystem
 from Systems.DroppingSystem import DroppingSystem
-from Systems.AVEventSystem import AVEventExitPropagationSystem, AVEventContainerPropagationSystem
+from Systems.AVEventSystem import AVEventExitPropagationSystem, AVEventContainerPropagationSystem, AVEventEmittingSystem
 from Systems.AVEventCleaner import AVEventCleaner
 from Systems.RoomDescriptionSystem import DescriptionSystem, NetworkDescriptionSystem
 from Systems.movement_system import MovingSystem
@@ -109,6 +109,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     putting_system = PuttingSystem(node_factory)
     dropping_system = DroppingSystem(node_factory)
     hold_trigger_system = HoldTriggerSystem(node_factory)
+    av_event_emit = AVEventEmittingSystem(node_factory)
     av_event_exit = AVEventExitPropagationSystem(node_factory)
     av_event_container = AVEventContainerPropagationSystem(node_factory)
     av_event_cleaner = AVEventCleaner(node_factory)
@@ -134,6 +135,7 @@ def register_systems(session_manager, object_db, node_factory, player_factory):
     system_set.register(putting_system)
     system_set.register(hold_trigger_system)
     system_set.register(dropping_system)
+    system_set.register(av_event_emit)
     system_set.register(av_event_container)
     system_set.register(av_event_exit)
     system_set.register(nAVs)
