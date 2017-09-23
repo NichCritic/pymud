@@ -30,6 +30,11 @@ class NetworkMessages(object):
         self.entity_id = entity_id
         self.msg = []
 
+    def send(self, text):
+        import Systems.NetworkMessageSystem as NetMes
+        message = NetMes.NetworkMessage(self.entity_id, text)
+        self.msg.append(message)
+
 
 class VisibleObjects(object):
 
@@ -119,10 +124,14 @@ class Entering(object):
 
 class Projectile(object):
 
-    def __init__(self, entity_id, on_hit, args, timeout=60):
+    def __init__(self, entity_id, args=None, on_hit=None, on_miss=None, on_attach=None, timeout=60):
         self.entity_id = entity_id
-        self.on_hit = on_hit
-        self.args = args
+        self.on_hit = (lambda node, **args: None) if on_hit is None else on_hit
+        self.on_miss = (
+            lambda node, **args: None) if on_miss is None else on_miss
+        self.on_attach = (
+            lambda node, **args: None) if on_attach is None else on_attach
+        self.args = {} if args is None else args
         self.timeout = timeout
         self.last_trigger = None
 

@@ -48,6 +48,19 @@ class ProjectileDodgingSystemTest(unittest.TestCase):
         self.dodge_sys.handle(node, 10070)
         self.assertFalse(node.has('dodging'))
 
+    def testDodgeTimesOutAfterSpecifiedTimeWithMessage(self):
+
+        def on_miss(node, **args):
+            node.message('Miss')
+
+        node = self.node_factory.create_new_node({'projectile': {'on_miss': on_miss},
+                                                  'dodging': {"format": {}}})
+        self.dodge_sys.handle(node, 0)
+
+        self.assertFalse(node.has('projectile'))
+        self.assertFalse(node.has('dodging'))
+        self.assertTrue(node.entity_has('network_messages'))
+
 
 class ProjectileSystemTest(unittest.TestCase):
 
@@ -76,7 +89,7 @@ class ProjectileSystemTest(unittest.TestCase):
 
     def testProcessingHandlesProjectileAfterTimeout(self):
         node = self.node_factory.create_new_node(
-            {'projectile': {'on_hit': lambda: None, 'args': {}, 'timeout': 60}})
+            {'projectile': {'on_hit': lambda node, **args: None, 'args': {}, 'timeout': 60}})
         self.proj_sys.handle(node, 1000000)
         self.assertTrue(node.entity_has('projectile'))
         self.proj_sys.handle(node, 1000050)
@@ -87,7 +100,7 @@ class ProjectileSystemTest(unittest.TestCase):
     def testProcessingCallsOnHitAfterTimeout(self):
         l = []
 
-        def on_hit(l):
+        def on_hit(node, l):
             l.append(1)
 
         node = self.node_factory.create_new_node(
@@ -98,6 +111,17 @@ class ProjectileSystemTest(unittest.TestCase):
         self.assertEqual(len(l), 0)
         self.proj_sys.handle(node, 1000100)
         self.assertEqual(len(l), 1)
+
+    def testProjectileSendsMessageOnFirstPass(self):
+        def on_attach(node, **args):
+            node.message('foo')
+
+        node = self.node_factory.create_new_node(
+            {'projectile': {'on_attach': on_attach}})
+
+        self.proj_sys.handle(node, 1000000)
+
+        self.assertTrue(node.entity_has('network_messages'))
 
 
 if __name__ == "__main__":

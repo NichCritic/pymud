@@ -11,10 +11,12 @@ class ProjectileSystem(TimedSystem):
 
         if last_trigger is None:
             node.projectile.last_trigger = curr_time
+            fn = node.projectile.on_attach
+            fn(node, **node.projectile.args)
 
         if self.is_timed_out(last_trigger, curr_time, timeout):
             fn = node.projectile.on_hit
-            fn(**node.projectile.args)
+            fn(node, **node.projectile.args)
 
             node.remove_component('projectile')
 
@@ -26,6 +28,8 @@ class ProjectileDodgingSystem(TimedSystem):
     def handle(self, node, curr_time):
         if node.has('projectile'):
             # AV event for dodging projectiles
+            fn = node.projectile.on_miss
+            fn(node, **node.projectile.args)
             node.remove_component('projectile')
             node.remove_component('dodging')
         else:
