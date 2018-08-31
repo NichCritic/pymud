@@ -36,8 +36,7 @@ class Luv(Rune):
             target.mana.mana -= amt
             node.mana.mana += amt
 
-            out_msg = NetworkMessage(
-                target.id, f"A luv rune on {node.names.name} flickers and you lose {amt} mana")
+            out_msg = NetworkMessage(target.id, f'A luv rune on {node.names.name} flickers and you lose {amt} mana')
             target.add_or_attach_component("network_messages", {})
             target.network_messages.msg.append(out_msg)
             return ('left')
