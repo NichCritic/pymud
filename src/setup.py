@@ -13,6 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/NichCritic/pymud",
     packages=setuptools.find_packages(),
+    install_requires=["tornado", "sqlalchemy", "nose", "mock"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
