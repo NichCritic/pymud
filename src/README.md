@@ -1,4 +1,4 @@
-# Project Title
+# PyMud
 
 This is a MUD (Multi User Dungeon) engine written in python.
 
